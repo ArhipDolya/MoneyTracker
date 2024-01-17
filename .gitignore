@@ -1,3 +1,5 @@
 *.pyc
 .env
 .idea/
+*.sqlite3
+core/MoneyTracker/settings/local.py
