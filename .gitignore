@@ -2,4 +2,6 @@
 .env
 .idea/
 *.sqlite3
+.ruff_cache
+.pre-commit-config.yaml
 core/MoneyTracker/settings/local.py

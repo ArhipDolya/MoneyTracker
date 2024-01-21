@@ -1,0 +1,25 @@
+# Python files
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+
+# Environment files
+.env
+
+# Version control directories
+.git
+
+# Log files
+*.log
+
+# Test directories
+tests/
+
+# Docker files
+Dockerfile
+docker-compose.yml
+
+# Other files
+*.sqlite3
+*.ruff_cache

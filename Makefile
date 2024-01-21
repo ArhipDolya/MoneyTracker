@@ -6,6 +6,7 @@ DB_CONTAINER = db
 LOGS = docker logs
 ENV_FILE = --env-file .env
 APP_CONTAINER = moneytracker-web-1
+MANAGE_PY = python manage.py
 
 .PHONY: up
 up:
@@ -21,8 +22,12 @@ up-build:
 
 .PHONY: makemigrations
 makemigrations:
-	${EXEC} ${APP_CONTAINER} python manage.py makemigrations
+	${EXEC} ${APP_CONTAINER} ${MANAGE_PY} makemigrations
 
 .PHONY: migrate
 migrate:
-	${EXEC} ${APP_CONTAINER} python manage.py migrate
+	${EXEC} ${APP_CONTAINER} ${MANAGE_PY} migrate
+
+.PHONY: superuser
+superuser:
+	${EXEC} ${APP_CONTAINER} ${MANAGE_PY} createsuperuser
