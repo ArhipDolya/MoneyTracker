@@ -9,15 +9,15 @@ APP_CONTAINER = moneytracker-web-1
 
 .PHONY: up
 up:
-	@docker-compose up
+	${DC} up
 
 .PHONY: build
 build:
-	@docker-compose build
+	${DC} build
 
 .PHONY: up-build
 up-build:
-	@docker-compose up --build
+	${DC} up --build
 
 .PHONY: makemigrations
 makemigrations:
