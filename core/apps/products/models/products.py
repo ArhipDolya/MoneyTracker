@@ -8,6 +8,12 @@ class Product(TimedBaseModel):
     description = models.TextField(verbose_name='Description of the product' ,blank=True)
     is_visible = models.BooleanField(verbose_name='Whether the product is in the catalog or not', default=True)
 
+    def __str__(self) -> str:
+        return self.title
+    
+    def __repr__(self) -> str:
+        return self.title
+
     class Meta:
         verbose_name = "Product"
         verbose_name_plural = "Products"
