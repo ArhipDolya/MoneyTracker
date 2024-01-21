@@ -4,4 +4,5 @@
 *.sqlite3
 .ruff_cache
 .pre-commit-config.yaml
+__pycache__
 core/MoneyTracker/settings/local.py
