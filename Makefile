@@ -5,15 +5,24 @@ EXEC = docker exec -it
 DB_CONTAINER = db
 LOGS = docker logs
 ENV_FILE = --env-file .env
+APP_CONTAINER = moneytracker-web-1
 
-.PHONY: storages
-storages:
-	${DC} -f ${STORAGES_FILE} ${ENV_FILE} up -d
+.PHONY: up
+up:
+	@docker-compose up
 
-.PHONY: storages-logs
-storages-logs:
-	${LOGS} ${DB_CONTAINER} -f
+.PHONY: build
+build:
+	@docker-compose build
 
-.PHONY: storages-down
-storages-down: 
-	${DC} -f ${STORAGES_FILE} down
+.PHONY: up-build
+up-build:
+	@docker-compose up --build
+
+.PHONY: makemigrations
+makemigrations:
+	${EXEC} ${APP_CONTAINER} python manage.py makemigrations
+
+.PHONY: migrate
+migrate:
+	${EXEC} ${APP_CONTAINER} python manage.py migrate
