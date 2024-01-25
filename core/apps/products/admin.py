@@ -5,4 +5,4 @@ from .models import Product
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = '__all__'
+    list_display = ('title', 'description', 'is_visible')
