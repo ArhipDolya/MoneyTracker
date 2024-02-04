@@ -31,3 +31,7 @@ migrate:
 .PHONY: superuser
 superuser:
 	${EXEC} ${APP_CONTAINER} ${MANAGE_PY} createsuperuser
+
+.PHONY: run-test
+run-test:
+	${EXEC} ${APP_CONTAINER} pytest
