@@ -16,10 +16,12 @@ ruff = "^0.1.7"
 django-ninja = "^1.1.0"
 pydantic = "^2.5.3"
 
-
 [tool.poetry.group.dev.dependencies]
 isort = "^5.13.2"
 pre-commit = "^3.6.0"
+faker = "^22.6.0"
+pytest = "^8.0.0"
+pytest-django = "^4.8.0"
 
 [tool.isort]
 multi_line_output = 3
@@ -40,11 +42,6 @@ skip_glob = [".git", ".idea", ".vscode", "venv", ".venv"]
 known_django = ["django", "ninja"]
 known_first_party = ["core"]
 sections = ["FUTURE", "STDLIB", "DJANGO", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
-src_paths=["core"]
-skip_glob=[".git", ".idea", ".vscode", "venv", ".venv"]
-known_django=["django", "ninja"]
-known_first_party=["core"]
-sections=["FUTURE","STDLIB","DJANGO","THIRDPARTY","FIRSTPARTY","LOCALFOLDER"]
 
 [build-system]
 requires = ["poetry-core"]
