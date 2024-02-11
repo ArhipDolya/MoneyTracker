@@ -47,7 +47,3 @@ sections = ["FUTURE", "STDLIB", "DJANGO", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLD
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-
-[pytest]
-DJANGO_SETTINGS_MODULE = core.MoneyTracker.settings.local

@@ -1,16 +1,18 @@
-FROM python:3.10-alpine
+FROM python:3.10-slim
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-RUN apk update && \
-    apk add --no-cache python3-dev \
+# Use apt to install packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends python3-dev \
     gcc \
     musl-dev \
     libpq-dev \
-    nmap
+    nmap && \
+    rm -rf /var/lib/apt/lists/*
 
 ADD pyproject.toml /app
 
