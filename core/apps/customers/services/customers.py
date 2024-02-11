@@ -31,6 +31,5 @@ class ORMCustomerService(BaseCustomerService):
     def generate_token(self, customer: CustomerEntity) -> str:
         new_token = str(uuid4())
         CustomerModel.objects.filter(phone=customer.phone).update(token=new_token)
-        
         return new_token
         
