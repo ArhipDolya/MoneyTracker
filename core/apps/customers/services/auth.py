@@ -26,7 +26,7 @@ class AuthService(BaseAuthService):
     def authorize(self, phone: str):
         customer = self.customer_service.get_or_create(phone)
         code = self.codes_service.generate_code(customer)
-        self.sender_service.send_code(code)
+        self.sender_service.send_code(customer, code)
 
     def confirm(self, code: str, phone: str):
         customer = self.codes_service.get(phone)
