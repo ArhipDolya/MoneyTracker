@@ -7,31 +7,30 @@ from core.apps.customers.services.customers import ORMCustomerService
 from core.apps.customers.services.senders import DummySenderService
 
 from core.api.schemas import ApiResponse
-from core.apps.customers.services.auth import AuthService
+from core.apps.customers.services.auth import AuthService, BaseAuthService
 
 from core.apps.common.exceptions import ServiceException
+from core.apps.products.containers import get_container
 
 
 router = Router(tags=['Customers'])
 
 
-@router.post('auth', response=ApiResponse[AuthOutSchema], operation_id='confirmCode')
+@router.post('auth', response=ApiResponse[AuthOutSchema], operation_id='co  nfirmCode')
 def auth_handler(request, schema: AuthInSchema) -> ApiResponse[AuthOutSchema]:
-    service = AuthService(customer_service=ORMCustomerService(), 
-                           codes_service=DjangoCacheCodeService(),
-                           sender_service=DummySenderService()
-                        )
+    container = get_container()
+    service = container.resolve(BaseAuthService)
+    
     service.authorize(schema.phone)
+    
     return ApiResponse(data=AuthOutSchema(
         message=f'Code is sent to {schema.phone}'
     ))
 
 @router.post('confirm', response=ApiResponse[TokenOutSchema], operation_id='authorize')
 def get_token_handler(request, schema: TokenInSchema) -> ApiResponse[TokenOutSchema]:
-    service = AuthService(customer_service=ORMCustomerService(), 
-                           codes_service=DjangoCacheCodeService(),
-                           sender_service=DummySenderService()
-                        )
+    container = get_container()
+    service = container.resolve(BaseAuthService)
     try:
         token = service.confirm(schema.code, schema.phone)
     except ServiceException as exception:
