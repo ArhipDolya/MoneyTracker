@@ -1,2 +1,2 @@
 from .products import Product  # noqa 
-from .reviews import ProductReview
+from .reviews import Review

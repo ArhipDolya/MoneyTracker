@@ -3,16 +3,18 @@ from django.db import models
 from core.apps.common.models import TimedBaseModel
 
 
-class ProductReview(TimedBaseModel):
+class Review(TimedBaseModel):
     customer = models.ForeignKey(
         to='customers.Customer',
         verbose_name='Reviewer',
         related_name='product_reviews',
+        on_delete=models.CASCADE,
     )
     product = models.ForeignKey(
         to='products.Product',
         verbose_name='Product',
         related_name='product_reviews',
+        on_delete=models.CASCADE,
     )
     rating = models.PositiveSmallIntegerField(
         verbose_name='User rating',
