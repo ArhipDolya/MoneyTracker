@@ -1,5 +1,9 @@
 from django.db import models
 
+from core.apps.customers.entities import Customer as CustomerEntity
+from core.apps.products.entities.products import Product as ProductEntity
+from core.apps.products.entities.reviews import Review as ReviewEntity
+
 from core.apps.common.models import TimedBaseModel
 
 
@@ -21,6 +25,19 @@ class Review(TimedBaseModel):
         default=1,
     )
     text = models.TextField(verbose_name='Review text', blank=True, default='')
+    
+    @classmethod
+    def from_entity(cls, review: ReviewEntity, product: ProductEntity, customer: CustomerEntity) -> 'Review':
+        return cls(pk=review.id, product=product.id, customer=customer.id, text=review.text, rating=review.rating)
+    
+    def to_entity(self) -> ReviewEntity:
+        return ReviewEntity(
+            id=self.id,
+            rating=self.rating,
+            text=self.text,
+            created_at=self.created_at,
+            updated_at=self.updated_at,
+        )
     
     class Meta:
         verbose_name = 'Product review'

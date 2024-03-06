@@ -4,6 +4,8 @@ from typing import Iterable
 from django.db.models import Q
 
 from core.api.filters import PaginationIn
+
+from core.apps.products.exceptions.products import ProductNotFound
 from core.apps.products.filters.products import ProductFilters
 from core.apps.products.entities.products import Product
 from core.apps.products.models.products import Product as ProductDTO
@@ -16,6 +18,10 @@ class IProductService(ABC):
 
     @abstractmethod
     def get_product_count(self, filters: ProductFilters) -> int:
+        ...
+        
+    @abstractmethod
+    def get_by_id(self, product_id: int) -> int:
         ...
 
 
@@ -38,3 +44,11 @@ class ORMProductService(IProductService):
         query = self._build_product_query(filters)
 
         return ProductDTO.objects.filter(query).count()
+    
+    def get_by_id(self, product_id: int) -> int:
+        try:
+            product_dto = ProductDTO.objects.get(pk=product_id)
+        except ProductDTO.DoesNotExist as exception:
+            raise ProductNotFound(product_id=product_id)
+            
+        return product_dto.to_entity()

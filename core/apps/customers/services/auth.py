@@ -7,7 +7,7 @@ from core.apps.customers.services.senders import BaseSenderService
 
 
 @dataclass(eq=False)
-class BaseAuthService(ABC):
+class IAuthService(ABC):
     customer_service: BaseCustomerService
     codes_service: BaseCodeService
     sender_service: BaseSenderService
@@ -21,7 +21,7 @@ class BaseAuthService(ABC):
         ...
 
 
-class AuthService(BaseAuthService):
+class AuthService(IAuthService):
 
     def authorize(self, phone: str):
         customer = self.customer_service.get_or_create(phone)

@@ -16,7 +16,7 @@ from core.apps.products.containers import get_container
 router = Router(tags=['Customers'])
 
 
-@router.post('auth', response=ApiResponse[AuthOutSchema], operation_id='co  nfirmCode')
+@router.post('auth', response=ApiResponse[AuthOutSchema], operation_id='confirmCode')
 def auth_handler(request, schema: AuthInSchema) -> ApiResponse[AuthOutSchema]:
     container = get_container()
     service = container.resolve(BaseAuthService)

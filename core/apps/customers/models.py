@@ -16,10 +16,7 @@ class Customer(TimedBaseModel):
         return self.phone
     
     def to_entity(self) -> CustomerEntity:
-        return CustomerEntity(
-            phone=self.phone,
-            created_at=self.created_at,
-        )
+        return CustomerEntity(phone=self.phone, created_at=self.created_at, id=self.pk)
 
 
     class Meta:
