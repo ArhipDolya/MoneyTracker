@@ -2,7 +2,7 @@ from django.db import models
 
 from uuid import uuid4
 from core.apps.common.models import TimedBaseModel
-from core.apps.customers.entities import CustomerEntity
+from core.apps.customers.entities import Customer as CustomerEntity
 
 
 class Customer(TimedBaseModel):
