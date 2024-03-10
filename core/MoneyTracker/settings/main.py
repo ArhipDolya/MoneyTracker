@@ -1,3 +1,4 @@
+from os import environ
 from pathlib import Path
 
 from decouple import config
@@ -28,12 +29,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Third party
+    'elasticapm.contrib.django',
+    
     # First party
     'core.apps.products',
     'core.apps.customers',
 ]
 
 MIDDLEWARE = [
+    'core.MoneyTracker.middlewares.ElasticApmMiddleware',
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -119,3 +125,52 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+ELASTIC_APM = {
+   'SERVICE_NAME': 'reviews',
+   #'SECRET_TOKEN': environ('APM_SECRET_TOKEN', default='secrettoken'),
+   'SERVER_URL': environ('APM_URL', default='http://apm-server:8200'),
+   'DEBUG': DEBUG,
+   'CAPTURE_BODY': 'all',
+   'ENVIRONMENT': 'prod',
+   'USE_ELASTIC_EXCEPTHOOK': True,
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+    },
+    'handlers': {
+        'elasticapm': {
+            'level': 'WARNING',
+            'class': 'elasticapm.contrib.django.handlers.LoggingHandler',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'ERROR',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'mysite': {
+            'level': 'WARNING',
+            'handlers': ['elasticapm'],
+            'propagate': False,
+        },
+        'elasticapm.errors': {
+            'level': 'ERROR',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+    },
+}

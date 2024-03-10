@@ -1,6 +1,8 @@
 import punq
 
 from functools import lru_cache
+from logging import Logger, getLogger
+
 from core.apps.customers.services.auth import IAuthService, AuthService
 from core.apps.customers.services.codes import BaseCodeService, DjangoCacheCodeService
 from core.apps.customers.services.customers import ORMCustomerService, ICustomerService
@@ -32,6 +34,7 @@ def _initialize_container() -> punq.Container:
     container.register(IReviewService, ORMReviewService)
     container.register(SingleReviewValidatorService)
     container.register(ReviewRatingValidatorService)
+    container.register(Logger, factory=getLogger, name='elasticapm.errors')
     
     def build_validator(container: punq.Container) -> IReviewValidatorService:
         return ComposedReviewValidatorService(validators=[
