@@ -129,7 +129,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ELASTIC_APM = {
    'SERVICE_NAME': 'reviews',
-   #'SECRET_TOKEN': environ('APM_SECRET_TOKEN', default='secrettoken'),
    'SERVER_URL': environ('APM_URL', default='http://apm-server:8200'),
    'DEBUG': DEBUG,
    'CAPTURE_BODY': 'all',
@@ -142,7 +141,7 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s error_meta:\n%{error_meta}s',
         },
     },
     'handlers': {
@@ -157,20 +156,10 @@ LOGGING = {
         }
     },
     'loggers': {
-        'django.db.backends': {
+        'django.request': {
             'level': 'ERROR',
             'handlers': ['console'],
             'propagate': False,
-        },
-        'mysite': {
-            'level': 'WARNING',
-            'handlers': ['elasticapm'],
-            'propagate': False,
-        },
-        'elasticapm.errors': {
-            'level': 'ERROR',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-    },
+        }
+    }
 }

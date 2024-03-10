@@ -1,3 +1,8 @@
+from dataclasses import asdict
+import json
+
+from logging import Logger
+
 from ninja import Router, Header
 from ninja.errors import HttpError
 
@@ -29,8 +34,10 @@ def create_review(
             product_id=product_id,
             review=schema.to_entity(),
         )
-    except ServiceException as exception:
-        raise HttpError(status_code=400, message=exception.message)    
+    except ServiceException as error:
+        logger: Logger = container.resolve(Logger)
+        logger.error(msg='User could not create review', extra={'error_meta': json.dumps(error).decode()})
+        raise HttpError(status_code=400, message=error.message)    
     
     
     return ApiResponse(data=ReviewOutSchema.from_entity(result))

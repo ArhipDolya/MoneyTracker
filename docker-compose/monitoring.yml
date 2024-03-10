@@ -46,6 +46,13 @@ services:
       retries: 10
       test: curl -s http://localhost:9200/_cluster/health | grep -vq '"status":"red"'
 
+  fluent-bit:
+    image: fluent/fluent-bit
+    volumes:
+      - ./docker_compose/fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+    depends_on:
+      - elasticsearch
+
   kibana:
     image: docker.elastic.co/kibana/kibana:7.6.2
     depends_on:

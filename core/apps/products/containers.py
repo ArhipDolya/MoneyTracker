@@ -34,7 +34,7 @@ def _initialize_container() -> punq.Container:
     container.register(IReviewService, ORMReviewService)
     container.register(SingleReviewValidatorService)
     container.register(ReviewRatingValidatorService)
-    container.register(Logger, factory=getLogger, name='elasticapm.errors')
+    container.register(Logger, factory=getLogger, name='django.request')
     
     def build_validator(container: punq.Container) -> IReviewValidatorService:
         return ComposedReviewValidatorService(validators=[
