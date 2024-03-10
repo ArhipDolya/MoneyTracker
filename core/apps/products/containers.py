@@ -7,7 +7,8 @@ from core.apps.customers.services.customers import ORMCustomerService, ICustomer
 from core.apps.customers.services.senders import BaseSenderService, DummySenderService
 
 from core.apps.products.services.products import ORMProductService, IProductService
-from core.apps.products.services.reviews import ComposedReviewValidatorService, IReviewService, IReviewValidatorService, ORMReviewService
+from core.apps.products.services.reviews import ComposedReviewValidatorService, IReviewService, IReviewValidatorService, \
+                                                ORMReviewService, ReviewRatingValidatorService, SingleReviewValidatorService
 
 from core.apps.products.use_cases.reviews.create import CreateReviewUseCase
 
@@ -18,6 +19,7 @@ def get_container() -> punq.Container:
     
     
 def _initialize_container() -> punq.Container:
+        
     container = punq.Container()
     # Products
     container.register(IProductService, ORMProductService)
@@ -28,7 +30,17 @@ def _initialize_container() -> punq.Container:
     container.register(BaseSenderService, DummySenderService)
     container.register(IAuthService, AuthService)
     container.register(IReviewService, ORMReviewService)
-    container.register(IReviewValidatorService, ComposedReviewValidatorService, validators=[])
+    container.register(SingleReviewValidatorService)
+    container.register(ReviewRatingValidatorService)
+    
+    def build_validator(container: punq.Container) -> IReviewValidatorService:
+        return ComposedReviewValidatorService(validators=[
+            container.resolve(SingleReviewValidatorService),
+            container.resolve(ReviewRatingValidatorService),
+        ])
+        
+    container.register(IReviewValidatorService, factory=build_validator)
+    
     container.register(CreateReviewUseCase)
     
     return container

@@ -7,17 +7,24 @@ from core.apps.customers.entities import Customer as CustomerEntity
 from core.apps.products.entities.products import Product as ProductEntity
 from core.apps.products.entities.reviews import Review as ReviewEntity
 
-from core.apps.products.exceptions.reviews import ReviewInvalidRating
+from core.apps.products.exceptions.reviews import ReviewInvalidRating, SingleReviewError
 
 
 
 class IReviewService(ABC):
+    @abstractmethod
+    def check_review_exists(self, product: ProductEntity, customer: ProductEntity) -> bool:
+        ...
+    
     @abstractmethod
     def save_review(self, customer: CustomerEntity, product: ProductEntity, review: ReviewEntity) -> ReviewEntity:
         ...
         
 
 class ORMReviewService(IReviewService):
+    def check_review_exists(self, product: ProductEntity, customer: ProductEntity) -> bool:
+        return ReviewDTO.objects.filter(product_id=product.id, customer_id=customer.id).exists()
+    
     def save_review(self, customer: CustomerEntity, product: ProductEntity, review: ReviewEntity) -> ReviewEntity:
         review_dto = ReviewDTO.from_entity(review=review, product=product, customer=customer)
         review_dto.save()
@@ -35,6 +42,15 @@ class ReviewRatingValidatorService(IReviewService):
             raise ReviewInvalidRating(rating=review.rating)
         
         
+@dataclass
+class SingleReviewValidatorService(IReviewService):
+    service: IReviewService
+    
+    def validate(self, product: ProductEntity, customer: CustomerEntity, *args, **kwargs):
+        if self.check_review_exists(product=product, customer=customer):
+            raise SingleReviewError(product_id=product.id, customer_id=customer.id)
+
+
 @dataclass
 class ComposedReviewValidatorService(IReviewValidatorService):
     validators: list[IReviewValidatorService]
